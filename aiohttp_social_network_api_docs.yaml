@@ -1,0 +1,448 @@
+---
+openapi: 3.1.0
+info:
+  title: Social network API docs
+  description: Aiohttp based API created for social network project.
+  contact:
+    email: apiteam@swagger.io
+  version: 1.0.1
+servers:
+- url: http://localhost/api/v0.2
+tags:
+- name: authorization
+  description: All about user authorization and authentication and creating
+- name: profiles
+  description: Getting paginated profiles for display in network and updating own profile
+- name: posts
+  description: Getting posts and creation own
+paths:
+  /register:
+    post:
+      tags:
+      - authorization
+      summary: Create new user
+      description: Create new user
+      requestBody:
+        description: Create new user
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                img:
+                  type: string
+                status:
+                  type: string
+                education:
+                  type: string
+                web_site:
+                  type: string
+                country:
+                  type: string
+                city:
+                  type: string
+                birth_date:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Successful creation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /login:
+    post:
+      tags:
+      - authorization
+      summary: Login user
+      description: Login user
+      requestBody:
+        description: Login user
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: User logged successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "404":
+          description: User is not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /logout:
+    post:
+      tags:
+      - authorization
+      summary: Logout user
+      description: Logout user
+      parameters:
+      - in: header
+        name: AuthToken
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      responses:
+        "200":
+          description: User logouted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /profile:
+    get:
+      tags:
+      - profiles
+      summary: Get profile
+      description: Get profile
+      parameters:
+      - name: profile_id
+        in: query
+        description: Get profile
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful get profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  profile:
+                    type: object
+                    example:
+                      id: integer
+                      img: string
+                      status: string
+                      education: string
+                      web_site: string
+                      country: string
+                      city: string
+                      birth_date: string
+                      created: string
+                      followed: boolean
+                      user: integer
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /profiles:
+    get:
+      tags:
+      - profiles
+      summary: Get paged profiles
+      description: Get paged profiles
+      parameters:
+      - name: count
+        in: query
+        description: Count of profiles at page
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful get profiles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  profiles:
+                    type: array
+                    example:
+                    - id: integer
+                      img: string
+                      status: string
+                      education: string
+                      web_site: string
+                      country: string
+                      city: string
+                      birth_date: string
+                      created: string
+                      followed: boolean
+                      user: integer
+                    - '....'
+                  total_count:
+                    type: integer
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+    put:
+      tags:
+      - profiles
+      summary: Update a profile
+      description: Update a profile
+      parameters:
+      - in: header
+        name: AuthToken
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      requestBody:
+        description: Data which will update in profile
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+                status:
+                  type: string
+                education:
+                  type: string
+                web_site:
+                  type: string
+                country:
+                  type: string
+                city:
+                  type: string
+                birth_date:
+                  type: string
+      responses:
+        "200":
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /posts:
+    get:
+      tags:
+      - posts
+      summary: Get user posts
+      description: Returns a map of status codes to quantities
+      parameters:
+      - name: count
+        in: query
+        description: Count of profiles at page
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: profile_id
+        in: query
+        description: Posts for which profile
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful get posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  posts:
+                    type: array
+                    example:
+                    - id: integer
+                      title: string
+                      description: string
+                      profile: integer
+                    - '....'
+                  message:
+                    type: string
+                  total_count:
+                    type: integer
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+    post:
+      tags:
+      - posts
+      summary: Create post
+      description: Create post
+      parameters:
+      - in: header
+        name: AuthToken
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      requestBody:
+        description: Data for post creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        "200":
+          description: Post successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
