@@ -60,6 +60,8 @@ paths:
                 properties:
                   success:
                     type: boolean
+                    examples:
+                    - true
                   message:
                     type: string
         "500":
@@ -141,7 +143,7 @@ paths:
       description: Logout user
       parameters:
       - in: header
-        name: AuthToken
+        name: Authorization
         schema:
           type: string
           example: 7e22a2a97140845e335f58062e50f5070334c0d3
@@ -156,6 +158,59 @@ paths:
                 properties:
                   success:
                     type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /whoami:
+    get:
+      tags:
+      - authorization
+      summary: Who am i
+      description: Who am i
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      responses:
+        "200":
+          description: Who am i got successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    example:
+                      id: integer
+                      username: string
+                      email: string
+                      token: string
+                      profile:
+                        img: string
+                        status: string
+                        education: string
+                        web_site: string
+                        country: string
+                        city: string
+                        birth_date: string
                   message:
                     type: string
         "500":
@@ -206,7 +261,10 @@ paths:
                       birth_date: string
                       created: string
                       followed: boolean
-                      user: integer
+                      user:
+                        id: integer
+                        username: string
+                        email: string
                   message:
                     type: string
         "500":
@@ -262,7 +320,10 @@ paths:
                       birth_date: string
                       created: string
                       followed: boolean
-                      user: integer
+                      user:
+                        id: integer
+                        username: string
+                        email: string
                     - '....'
                   total_count:
                     type: integer
@@ -288,7 +349,7 @@ paths:
       description: Update a profile
       parameters:
       - in: header
-        name: AuthToken
+        name: Authorization
         schema:
           type: string
           example: 7e22a2a97140845e335f58062e50f5070334c0d3
@@ -404,7 +465,7 @@ paths:
       description: Create post
       parameters:
       - in: header
-        name: AuthToken
+        name: Authorization
         schema:
           type: string
           example: 7e22a2a97140845e335f58062e50f5070334c0d3
