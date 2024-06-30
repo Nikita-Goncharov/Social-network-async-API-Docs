@@ -196,21 +196,22 @@ paths:
                 properties:
                   success:
                     type: boolean
-                  data:
+                  profile:
                     type: object
                     example:
                       id: integer
-                      username: string
-                      email: string
-                      token: string
-                      profile:
-                        img: string
-                        status: string
-                        education: string
-                        web_site: string
-                        country: string
-                        city: string
-                        birth_date: string
+                      img: string
+                      status: string
+                      education: string
+                      web_site: string
+                      country: string
+                      city: string
+                      birth_date: string
+                      user:
+                        id: integer
+                        username: string
+                        email: string
+                        token: string
                   message:
                     type: string
         "500":
