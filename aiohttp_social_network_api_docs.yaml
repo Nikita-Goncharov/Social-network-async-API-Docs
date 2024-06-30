@@ -4,7 +4,7 @@ info:
   title: Social network API docs
   description: Aiohttp based API created for social network project.
   contact:
-    email: apiteam@swagger.io
+    email: nikitagoncarov657@gmail.com
   version: 1.0.1
 servers:
 - url: http://localhost:8080/api/v0.2
@@ -14,14 +14,17 @@ tags:
 - name: profiles
   description: Getting paginated profiles for display in network and updating own profile
 - name: posts
-  description: Getting posts and creation own
+  description: Getting posts and creating own
+- name: dialogs
+  description: "Getting paginated dialogs, creating and deleting own"
+- name: messages
+  description: Getting messages by dialog and creating own
 paths:
   /register:
     post:
       tags:
       - authorization
       summary: Create new user
-      description: Create new user
       requestBody:
         description: Create new user
         content:
@@ -82,7 +85,6 @@ paths:
       tags:
       - authorization
       summary: Login user
-      description: Login user
       requestBody:
         description: Login user
         content:
@@ -140,7 +142,6 @@ paths:
       tags:
       - authorization
       summary: Logout user
-      description: Logout user
       parameters:
       - in: header
         name: Authorization
@@ -178,7 +179,6 @@ paths:
       tags:
       - authorization
       summary: Who am i
-      description: Who am i
       parameters:
       - in: header
         name: Authorization
@@ -231,7 +231,6 @@ paths:
       tags:
       - profiles
       summary: Get profile
-      description: Get profile
       parameters:
       - name: profile_id
         in: query
@@ -285,7 +284,6 @@ paths:
       tags:
       - profiles
       summary: Get paged profiles
-      description: Get paged profiles
       parameters:
       - name: count
         in: query
@@ -346,7 +344,6 @@ paths:
       tags:
       - profiles
       summary: Update a profile
-      description: Update a profile
       parameters:
       - in: header
         name: Authorization
@@ -406,7 +403,6 @@ paths:
       tags:
       - posts
       summary: Get user posts
-      description: Returns a map of status codes to quantities
       parameters:
       - name: count
         in: query
@@ -462,7 +458,6 @@ paths:
       tags:
       - posts
       summary: Create post
-      description: Create post
       parameters:
       - in: header
         name: Authorization
@@ -485,6 +480,266 @@ paths:
       responses:
         "200":
           description: Post successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /dialogs:
+    get:
+      tags:
+      - dialogs
+      summary: Get profile dialogs
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      - name: count
+        in: query
+        description: Count of dialogs at page
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful get profile dialogs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  dialogs:
+                    type: array
+                    example:
+                    - id: integer
+                      first_profile: integer
+                      second_profile: integer
+                      created: string
+                    - '....'
+                  message:
+                    type: string
+                  total_count:
+                    type: integer
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+    post:
+      tags:
+      - dialogs
+      summary: Create dialog
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      requestBody:
+        description: Data for dialog creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile_id:
+                  type: integer
+      responses:
+        "200":
+          description: Dialog successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+    delete:
+      tags:
+      - dialogs
+      summary: Delete dialog
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      requestBody:
+        description: Data for dialog deleting
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dialog_id:
+                  type: integer
+      responses:
+        "200":
+          description: Dialog successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+  /messages:
+    get:
+      tags:
+      - messages
+      summary: Get messages by dialog
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      - name: count
+        in: query
+        description: Count of messages at page
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: integer
+      - name: dialog_id
+        in: query
+        description: Id of dialog
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful get messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  messages:
+                    type: array
+                    example:
+                    - id: integer
+                      text: string
+                      created: string
+                      owner: integer
+                      dialog: integer
+                    - '....'
+                  message:
+                    type: string
+                  total_count:
+                    type: integer
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+    post:
+      tags:
+      - messages
+      summary: Create message
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      requestBody:
+        description: Data for message creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dialog_id:
+                  type: integer
+                text:
+                  type: string
+      responses:
+        "200":
+          description: Message successfully created
           content:
             application/json:
               schema:
