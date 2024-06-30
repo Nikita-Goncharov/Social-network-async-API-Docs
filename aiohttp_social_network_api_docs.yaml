@@ -762,3 +762,96 @@ paths:
                     - false
                   message:
                     type: string
+  /follow:
+    post:
+      tags:
+      - follow
+      summary: Follow profile
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      requestBody:
+        description: Profile id for following
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile_id:
+                  type: integer
+      responses:
+        "200":
+          description: Profile followed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
+    delete:
+      tags:
+      - follow
+      summary: Unfollow profile
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+          example: 7e22a2a97140845e335f58062e50f5070334c0d3
+        required: true
+      requestBody:
+        description: Profile id for unfollowing
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile_id:
+                  type: integer
+      responses:
+        "200":
+          description: Profile unfollowed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    examples:
+                    - false
+                  message:
+                    type: string
